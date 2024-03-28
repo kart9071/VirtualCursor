@@ -9,6 +9,9 @@ folderPath="Presentation"
 hs,ws=int(120*1),int(213*1)
 imgNumber=2
 
+#Adding the hand detector
+detector=HandDetector(detectionCon=0.8,maxHands=1)
+
 
 #Camera configuration
 cap =cv2.VideoCapture(0)
@@ -26,6 +29,8 @@ while True:
     success,img=cap.read()
     pathfullImage=os.path.join(folderPath,pathImages[imgNumber])
     imgcurrent=cv2.imread(pathfullImage)
+
+    hands,img=detector.findHands(img)
 
     #Adding webcam image on the slide on the top right corner
     imgsmall =cv2.resize(img,(ws,hs))
