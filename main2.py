@@ -63,7 +63,7 @@ while True:
                 if imgNumber<len(pathImages)-1:
                     buttonPressed=True
                     imgNumber+=1
-
+            
             #Gesture 3 - show pointer
             if fingers==[0,1,1,0,0]:
                 cv2.circle(imgcurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
