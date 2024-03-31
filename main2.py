@@ -1,7 +1,7 @@
 import cv2
 import os
 from cvzone.HandTrackingModule import HandDetector
-import pyautogui
+import numpy as np
 
 
 width,height=1280,720
@@ -9,7 +9,7 @@ folderPath="Presentation"
 
 #Variables
 hs,ws=int(120*1),int(213*1)
-imgNumber=2
+imgNumber=0
 gestureThreshold=300
 buttonPressed=False
 buttonCounter=0
@@ -37,6 +37,7 @@ while True:
     img=cv2.flip(img,1)
     pathfullImage=os.path.join(folderPath,pathImages[imgNumber])
     imgcurrent=cv2.imread(pathfullImage)
+    # w = imgcurrent.shape[0]
 
     hands,img=detector.findHands(img)
     cv2.line(img,(0,gestureThreshold),(width,gestureThreshold),(0,255,0),10)
@@ -45,7 +46,10 @@ while True:
         fingers=detector.fingersUp(hand)
         cx,cy=hand['center']
         lmList=hand['lmList']
-        indexFinger=lmList[8][0],lmList[8][1]
+        xVal = int(np.interp(lmList[8][0], [width//2, width], [0, width]))
+        yVal = int(np.interp(lmList[8][1], [150, height-150], [0, height]))
+        indexFinger=xVal,yVal
+
         # print(fingers)
         
         if cy<=gestureThreshold:    # if the hand at the height of the face
@@ -64,15 +68,19 @@ while True:
                     buttonPressed=True
                     imgNumber+=1
             
-            #Gesture 3 - show pointer
-            if fingers==[0,1,1,0,0]:
-                cv2.circle(imgcurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
+        #Gesture 3 - show pointer
+        if fingers==[0,1,1,0,0]:
+            cv2.circle(imgcurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
+
+        if fingers==[0,1,0,0,0]:
+            cv2.circle(imgcurrent,indexFinger,12,(0,0,255),cv2.FILLED)
     #Button pressed iterations
     if buttonPressed:
         buttonCounter+=1
         if buttonCounter>buttonDelay:
             buttonCounter=0
             buttonPressed=False
+
     #Adding webcam image on the slide on the top right corner
     imgsmall =cv2.resize(img,(ws,hs))
     h, w, _=imgcurrent.shape
