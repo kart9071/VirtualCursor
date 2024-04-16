@@ -28,11 +28,13 @@ annotations = [[]]
 annotationNumber = -1
 annotationStart = False
 hs, ws = int(120 * 1), int(213 * 1)  # width and height of small image
+rectangePointer=False
+
+
 
 # Get list of presentation images
 pathImages = sorted(os.listdir(folderPath), key=len)
 print(pathImages)
-
 while True:
     # Get image frame
     success, img = cap.read()
@@ -57,6 +59,7 @@ while True:
         yVal = int(np.interp(lmList[8][1], [150, height-150], [0, height]))
         indexFinger = xVal, yVal
 
+
         if cy <= gestureThreshold:  # If hand is at the height of the face
             if fingers == [1, 0, 0, 0, 0]:
                 print("Left")
@@ -77,7 +80,7 @@ while True:
 
         if fingers == [0, 1, 1, 0, 0]:
             cv2.circle(imgCurrent, indexFinger, 12, (0, 0, 255), cv2.FILLED)
-
+        
         if fingers == [0, 1, 0, 0, 0]:
             if annotationStart is False:
                 annotationStart = True
@@ -98,6 +101,8 @@ while True:
 
     else:
         annotationStart = False
+
+        
 
     if buttonPressed:
         counter += 1
