@@ -1,6 +1,7 @@
 import cv2
 from cvzone.HandTrackingModule import HandDetector
 import time
+import math
 
 class Button:
     def __init__(self,pos,width,height,value):
@@ -33,7 +34,7 @@ detector=HandDetector(detectionCon=0.8,maxHands=1)
 
 #creating buttons
 buttonListValues=[['7','8','9','*','DEL'],
-            ['4','5','6','-','->'],
+            ['4','5','6','-','root'],
             ['1','2','3','+','AC'],
             ['0','/','.','=','ON']]
 
@@ -41,7 +42,7 @@ buttonListValues=[['7','8','9','*','DEL'],
 buttonList=[]
 for x in range(5):
     for y in range(4):
-        xpos=x*100+700
+        xpos=x*100+400
         ypos=y*100+100
         if y==5:
             buttonList.append(Button((xpos,ypos),125,100,buttonListValues[y][x]))
@@ -59,8 +60,8 @@ while True:
     hands,img=detector.findHands(img,flipType=False)
 
     #Draw all buttons
-    cv2.rectangle(img,(700,15),(700+400,100+70),(225,225,225),cv2.FILLED)
-    cv2.rectangle(img,(700,15),(700+400,100+70),(50,50,50),3)
+    cv2.rectangle(img,(400,15),(400+400,100+70),(225,225,225),cv2.FILLED)
+    cv2.rectangle(img,(400,15),(400+400,100+70),(50,50,50),3)
     for button in buttonList:
         button.draw(img)
 
@@ -78,6 +79,8 @@ while True:
                         myEquation=str(eval(myEquation))
                     elif myValue=='DEL':
                         myEquation=myEquation[:-1]
+                    elif myValue=='AC':
+                        myEquation=''
                     else:
                         myEquation+=myValue
                     delayCounter=1
@@ -91,9 +94,9 @@ while True:
     letters=len(myEquation)
     if letters>13 :
         modified_equation=myEquation[-13:]
-        cv2.putText(img,modified_equation[1:],(710,70),cv2.FONT_HERSHEY_PLAIN,3,(50,50,50),3)
+        cv2.putText(img,modified_equation[1:],(410,70),cv2.FONT_HERSHEY_PLAIN,3,(50,50,50),3)
     else:
-        cv2.putText(img,myEquation,(710,70),cv2.FONT_HERSHEY_PLAIN,3,(50,50,50),3)
+        cv2.putText(img,myEquation,(410,70),cv2.FONT_HERSHEY_PLAIN,3,(50,50,50),3)
 
     cv2.imshow("Image",img)
     key=cv2.waitKey(1)
